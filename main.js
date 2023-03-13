@@ -113,17 +113,25 @@ function showNewUserPost(res){
   // Create a single list item for all the user details
   const detailsItem = document.createElement('li');
   detailsItem.textContent = `Name: ${res.name}, Email: ${res.email}, Phone: ${res.phone}`;
- 
-
+  detailsItem.id = res._id;
+;
   const deleteItem = document.createElement('input');
   deleteItem.type = "button";
   deleteItem.value = "Delete";
+  detailsItem.id = res._id;
  
 
-  deleteItem.onclick =() => {
-
-    localStorage.removeItem("userDetails");
-    itemsList.removeChild(detailsItem);
+  deleteItem.onclick =(e) => {
+// console.log(e.target)
+     let user_id=detailsItem.id;
+        axios.delete(`https://crudcrud.com/api/4e37d73afcac44f893299c37457d0084/appointmentData/${user_id}`)
+        .then((res)=> {
+            removeUserFromList(user_id)
+        })
+        .catch(()=>
+        console.log(err))
+      
+      
   }
 
   const editItem = document.createElement('input');
@@ -156,7 +164,7 @@ function showNewUserGet(res){
         // console.log(`Name: ${items.name}, Email: ${items.email}, Phone: ${items.phone}`);
         const detailsItem = document.createElement('li');
         detailsItem.textContent = `Name: ${items.name}, Email: ${items.email}, Phone: ${items.phone}`;
-       
+        detailsItem.id = items._id;
       
         const deleteItem = document.createElement('input');
         deleteItem.type = "button";
@@ -165,8 +173,15 @@ function showNewUserGet(res){
       
         deleteItem.onclick =() => {
       
-          localStorage.removeItem("userDetails");
-          itemsList.removeChild(detailsItem);
+        //   localStorage.removeItem("userDetails");
+        //   itemsList.removeChild(detailsItem);
+        let user_id=items._id;
+        axios.delete(`https://crudcrud.com/api/4e37d73afcac44f893299c37457d0084/appointmentData/${items._id}`)
+        .then((res)=> {
+            removeUserFromList(user_id)
+        })
+        .catch(()=>
+        console.log(err))
         }
       
         const editItem = document.createElement('input');
@@ -196,3 +211,18 @@ function showNewUserGet(res){
    
 
   } 
+
+  function removeUserFromList(userId){
+
+    console.log(userId)
+
+    const parentNode = document.getElementById("items");
+    const childDelete = document.getElementById(userId);
+    console.log(parentNode);
+    console.log(childDelete);
+
+
+    if(childDelete){
+        parentNode.removeChild(childDelete);
+    }
+  }
